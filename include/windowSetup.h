@@ -108,7 +108,7 @@ bool listenForExitAttempts(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-#define POST_THREAD_EXIT if (!PostMessage(hWnd, UWM_EXIT_FROM_THREAD, 0, 0)) { debuglogger::out << debuglogger::error << "failed to post UWM_EXIT_FROM_THREAD message to window queue" << debuglogger::endl; }
+#define POST_THREAD_EXIT if (!PostMessage(hWnd, UWM_EXIT_FROM_THREAD, 0, 0)) { debuglogger::out << debuglogger::error << "failed to post UWM_EXIT_FROM_THREAD message to window queue\n"; }
 void graphicsLoop();
 
 #ifdef UNICODE
@@ -116,9 +116,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, wchar_t* lpCmd
 #else
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow) {
 #endif
-	debuglogger::out << "program started" << debuglogger::endl;
+	debuglogger::out << "program started\n";
 
-	debuglogger::out << "setting up window..." << debuglogger::endl;
+	debuglogger::out << "setting up window...\n";
 	WNDCLASS windowClass = { };																																			// Create WNDCLASS struct for later window creation.
 	windowClass.lpfnWndProc = windowProc;
 	windowClass.hInstance = hInstance;
@@ -126,36 +126,36 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lpCmdLine
 	windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 
 	if (!RegisterClass(&windowClass)) {
-		debuglogger::out << debuglogger::error << "failed to register window class" << debuglogger::endl;
+		debuglogger::out << debuglogger::error << "failed to register window class\n";
 		return EXIT_FAILURE;
 	}
 
 	hWnd = CreateWindow(windowClass.lpszClassName, TEXT(WINDOW_TITLE), WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr, hInstance, nullptr);
 	if (hWnd == nullptr) {																																				// Check if creation of window was successful.
-		debuglogger::out << debuglogger::error << "couldn't create window" << debuglogger::endl;
+		debuglogger::out << debuglogger::error << "couldn't create window\n";
 		return EXIT_FAILURE;
 	}
 
-	debuglogger::out << "showing window..." << debuglogger::endl;
+	debuglogger::out << "showing window...\n";
 	ShowWindow(hWnd, nCmdShow);
 
 	RECT clientRect;
 	if (!GetClientRect(hWnd, &clientRect)) {
-		debuglogger::out << debuglogger::error << "failed to get client size" << debuglogger::endl;
+		debuglogger::out << debuglogger::error << "failed to get client size\n";
 		return EXIT_FAILURE;
 	}
 	POINT clientPos = { 0, 0 };
 	if (!ClientToScreen(hWnd, &clientPos)) {
-		debuglogger::out << debuglogger::error << "failed to get client pos in screen coords" << debuglogger::endl;
+		debuglogger::out << debuglogger::error << "failed to get client pos in screen coords\n";
 		return EXIT_FAILURE;
 	}
 	setWindow(clientPos.x, clientPos.y, clientRect.right, clientRect.bottom);
 
-	debuglogger::out << "starting graphics thread..." << debuglogger::endl;
+	debuglogger::out << "starting graphics thread...\n";
 	graphicsThread = std::thread(graphicsLoop);
 
-	debuglogger::out << "running message loop..." << debuglogger::endl;
+	debuglogger::out << "running message loop...\n";
 	MSG msg = { };
 	while (GetMessage(&msg, nullptr, 0, 0)) {
 		TranslateMessage(&msg);
@@ -163,6 +163,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, char* lpCmdLine
 	}
 
 	if (graphicsThread.joinable()) { graphicsThread.join(); }																											// Join the graphicsThread if the user hasn't done it yet.
-	debuglogger::out << "terminating program..." << debuglogger::endl;
+	debuglogger::out << "terminating program...\n";
 	return msg.wParam;																																					// As per documentation, the system return code and the PostQuitMessage return code have to be the same.
 }
