@@ -108,7 +108,12 @@ bool listenForExitAttempts(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 LRESULT CALLBACK windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-#define POST_THREAD_EXIT if (!PostMessage(hWnd, UWM_EXIT_FROM_THREAD, 0, 0)) { debuglogger::out << debuglogger::error << "failed to post UWM_EXIT_FROM_THREAD message to window queue\n"; }
+void postThreadExit() {
+	if (!PostMessage(hWnd, UWM_EXIT_FROM_THREAD, 0, 0)) {
+		debuglogger::out << debuglogger::error << "failed to post UWM_EXIT_FROM_THREAD message to window queue\n";
+	}
+}
+
 void graphicsLoop();
 
 #ifdef UNICODE
