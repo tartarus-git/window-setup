@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS																						// Disables warnings for functions that are deemed insecure by the standard. It's only for _itoa, which I am using safely, so I can turn of the warnings.
 
-#include "debugOutput.h"
+#include "../include/logging/debugOutput.h"
 
 #include <Windows.h>
 
@@ -8,7 +8,7 @@
 #include <cstdlib>																									// This is included because we need access to _itoa.
 #include <string>
 
-DebugOutput& DebugOutput::operator<<(const char* input) {
+const DebugOutput& DebugOutput::operator<<(const char* input) const {
 #ifndef _DEBUG
 	return *this;
 #endif
@@ -16,7 +16,7 @@ DebugOutput& DebugOutput::operator<<(const char* input) {
 	return *this;
 }
 
-DebugOutput& DebugOutput::operator<<(char* input) {
+const DebugOutput& DebugOutput::operator<<(char* input) const {
 #ifndef _DEBUG
 	return *this;
 #endif
@@ -24,7 +24,7 @@ DebugOutput& DebugOutput::operator<<(char* input) {
 	return *this;
 }
 
-DebugOutput& DebugOutput::operator<<(char input) {
+const DebugOutput& DebugOutput::operator<<(char input) const {
 #ifndef _DEBUG
 	return *this;
 #endif
@@ -33,7 +33,7 @@ DebugOutput& DebugOutput::operator<<(char input) {
 	return *this;
 }
 
-DebugOutput& DebugOutput::operator<<(std::string& input) {
+const DebugOutput& DebugOutput::operator<<(std::string& input) const {
 #ifndef _DEBUG
 	return *this;
 #endif
@@ -41,21 +41,31 @@ DebugOutput& DebugOutput::operator<<(std::string& input) {
 	return *this;
 }
 
-DebugOutput& DebugOutput::operator<<(int32_t input) {
+const DebugOutput& DebugOutput::operator<<(int32_t input) const {
 #ifndef _DEBUG
 	return *this;
 #endif
-	char buffer[12];
+	char buffer[12];																								// Maximum length that an int32_t could have when expressed as a string.
 	_itoa(input, buffer, 10);
 	OutputDebugStringA(buffer);
 	return *this;
 }
 
-DebugOutput& DebugOutput::operator<<(uint32_t input) {
+const DebugOutput& DebugOutput::operator<<(uint32_t input) const {
 #ifndef _DEBUG
 	return *this;
 #endif
-	char buffer[11];
+	char buffer[11];																								// Maximum length that a uint32_t could have when expressed as a string.
+	_itoa(input, buffer, 10);
+	OutputDebugStringA(buffer);
+	return *this;
+}
+
+const DebugOutput& DebugOutput::operator<<(int16_t input) const {
+#ifndef _DEBUG
+	return *this;
+#endif
+	char buffer[7];
 	_itoa(input, buffer, 10);
 	OutputDebugStringA(buffer);
 	return *this;
